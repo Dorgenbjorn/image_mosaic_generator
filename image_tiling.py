@@ -1,9 +1,7 @@
 from functools import reduce
-
 import numpy as np
 import pandas as pd
 import cv2
-
 
 class TiledImage:
 

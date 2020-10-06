@@ -24,7 +24,8 @@ class Consolodator:
         
         self.input_directory = input_directory
         self.output_directory = output_directory
-        mkdir(output_directory)
+        if output_directory:
+            mkdir(output_directory)
         # TODO: Make a configuration file for extensions.
         self.extensions = ["tif", "tiff", "png", "bmp", "jpg", "jpeg"]
 
@@ -33,6 +34,7 @@ class Consolodator:
 
         for root, dirs, files in os.walk(self.input_directory):
             pprint.pprint(root)
+            pprint.pprint(files)
             matched_file_names = [
                     self.validate_file(f) for f in files]
             matched_file_names = list(
@@ -49,8 +51,6 @@ class Consolodator:
 
         shutil.copy(path, self.output_directory)
         print("COPIED {} TO {}".format(path, self.output_directory))
-
-
 
 
     def validate_file(self, filename):
@@ -81,14 +81,12 @@ class ColorStatisticComputer(Consolodator):
 
 
     color_stats_df = None
-    dir_key = None
 
 
     def __init__(self, input_directory, output_directory):
 
         Consolodator.__init__(self, input_directory, output_directory)
         self.color_stats_df = pd.DataFrame()
-        self.dir_key = re.match(r"\w+:", input_directory).group()
 
 
     def process_file(self, path):
@@ -98,7 +96,6 @@ class ColorStatisticComputer(Consolodator):
         mean_L = image[:,:,0].mean()
         mean_a = image[:,:,1].mean()
         mean_b = image[:,:,2].mean()
-
         df = pd.DataFrame()
         df["path"] = [path]
         df["mean_L"] = [mean_L]
@@ -111,8 +108,7 @@ class ColorStatisticComputer(Consolodator):
 
     def export(self, file_name="image_statistics.csv"):
 
-        out_path = os.path.join(self.output_directory, file_name)
-        self.color_stats_df.to_csv(out_path)
+        self.color_stats_df.to_csv(file_name)
 
 
 class MetadataCollector(Consolodator):
@@ -168,13 +164,6 @@ class MetadataCollector(Consolodator):
         yaml_string = reduce(lambda a, b: a+"\n"+b, fields)
         metadata = yaml.load(yaml_string, Loader=yaml.FullLoader)
         return metadata
-
-
-        
-
-
-
-
 
 ###########################################################
 #    
