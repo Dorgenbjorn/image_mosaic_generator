@@ -23,8 +23,8 @@ def main(args):
     else:
         timmy = image_tiling.TiledImage(
                 image_path=input_image, 
-                tile_shape=(50,50), 
-                scaling_factor=None)
+                tile_shape=(20,20), 
+                scaling_factor=2)
         image_df = image_tiling.pd.read_csv(image_table)
         out_image_matrix = timmy.make(image_df, unique_flag=False)
         image_tiling.cv2.imwrite(output_image, out_image_matrix)
