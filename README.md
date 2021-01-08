@@ -32,13 +32,13 @@ optional arguments:
                         dimensions result in larger mosaic tiles while smaller
                         dimensions result in smaller mosaic tiles.
   -S SCALING_FACTOR, --scaling_factor SCALING_FACTOR
-                        The multiple by which the input image will be resized
+                        The multiple by which the input image will be re-sized
                         (this is applied to both x and y axies). So, a
                         scaling_factor of 0.5 will make both the x and y axies
                         of the resultant image half the length of the input
                         hence the resultant image will be one quarter of the
                         area of the input image. The same applies for
-                        scaling_factors greater than 1 except the resultan
+                        scaling_factors greater than 1 except the resultant
                         image will be larger. This is especially useful for
                         smaller images.
 ```
