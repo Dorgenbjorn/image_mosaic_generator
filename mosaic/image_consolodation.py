@@ -1,5 +1,3 @@
-# image_consolodation.py
-
 import os
 import shutil
 import subprocess
@@ -8,7 +6,6 @@ import pprint
 import pandas as pd
 import numpy as np
 import cv2
-import yaml
 from functools import reduce
 
 
@@ -111,59 +108,6 @@ class ColorStatisticComputer(Consolodator):
         self.color_stats_df.to_csv(file_name)
 
 
-class MetadataCollector(Consolodator):
-    """Designed to collect metadata from images."""
-
-    metadata = None
-    dir_key = None
-
-
-    def __init__(self, input_directory, output_directory):
-
-        Consolodator.__init__(self, input_directory, output_directory)
-        self.metadata = dict()
-        self.dir_key = re.match(r"\w+:", input_directory).group()
-
-
-    def collect(self):
-
-        print("collecting")
-        self.walk()
-        print("collected")
-
-
-    def process_file(self, path):
-        
-        id_string = self.identify(path)
-        data_dictionary = self.parse(id_string)
-        self.metadata.update({path: data_dictionary})
-
-
-    def identify(self, path):
-
-        print(path)
-        out = subprocess.run(
-            [self.dir_key, "\n", "magick", "identify", "-verbose", 
-                path],
-            stdout=subprocess.PIPE,
-            shell=True
-            )
-        return out.stdout
-
-
-    def parse(self, string):
-
-        string = string.decode("utf-8")
-        fields = re.split(r"\r\n", string)
-        head = fields[0]
-        fields = fields[1:]
-        fields = list(
-                filter(
-                    lambda s: not (re.match(r"\d+:", s) is None),
-                    fields))
-        yaml_string = reduce(lambda a, b: a+"\n"+b, fields)
-        metadata = yaml.load(yaml_string, Loader=yaml.FullLoader)
-        return metadata
 
 ###########################################################
 #    
